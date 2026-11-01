@@ -62,7 +62,7 @@ may show the placeholder for a while before their images appear.
 
 | Setting | Default | |
 |---|---|---|
-| `thumbnail_size` | `240` | Width of the thumbnail column in px; the image keeps a 3:2 ratio and is cropped to fit. |
+| `thumbnail_size` | `240` | Width of the thumbnail column in px, from 100 to 400; the image keeps a 3:2 ratio and is cropped to fit. |
 | `mobile_thumbnails` | `true` | Show thumbnails on mobile, as a banner above the card. See below. |
 | `placeholder_icon` | `comments` | Icon for topics with no image, so cards keep a uniform width. Any icon name works. Leave it and `placeholder_background` empty and those cards run full width instead. |
 | `placeholder_background` | *(none)* | Image behind the placeholder icon. Without one, the placeholder is a soft gradient of the color scheme's accent (`--tertiary-very-low`) into its neutral tint (`--primary-very-low`), so it follows light and dark schemes. With an upload and an empty `placeholder_icon`, the image alone fills the slot. |

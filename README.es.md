@@ -62,7 +62,7 @@ pueden mostrar el marcador de posición un tiempo antes de que aparezcan sus im�
 
 | Ajuste | Por defecto | |
 |---|---|---|
-| `thumbnail_size` | `240` | Ancho de la columna de miniatura en px; la imagen mantiene una proporción 3:2 y se recorta para ajustarse. |
+| `thumbnail_size` | `240` | Ancho de la columna de miniatura en px, de 100 a 400; la imagen mantiene una proporción 3:2 y se recorta para ajustarse. |
 | `mobile_thumbnails` | `true` | Muestra miniaturas en móvil, como un banner sobre la tarjeta. Ver más abajo. |
 | `placeholder_icon` | `comments` | Icono para temas sin imagen, para que las tarjetas mantengan un ancho uniforme. Sirve cualquier nombre de icono. Si se deja vacío junto con `placeholder_background`, esas tarjetas ocupan el ancho completo. |
 | `placeholder_background` | *(ninguna)* | Imagen detrás del icono de reemplazo. Sin ella, el reemplazo es un degradado suave del acento de la paleta (`--tertiary-very-low`) hacia su tono neutro (`--primary-very-low`), así que sigue los esquemas claro y oscuro. Con una imagen subida y `placeholder_icon` vacío, la imagen sola ocupa el espacio. |

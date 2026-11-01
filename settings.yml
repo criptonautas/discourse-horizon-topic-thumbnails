@@ -1,5 +1,7 @@
 thumbnail_size:
   default: 240
+  min: 100
+  max: 400
 
 mobile_thumbnails:
   default: true
