@@ -1,12 +1,11 @@
 // `thumbnails` is Discourse's topic.thumbnails array. Index 0 is the original
 // upload; the rest are the sizes declared in about.json.
 //
-// We display the original. The cell is only `thumbnail_size` wide, but it fills
-// the height of the card and is cover-cropped, so on a retina screen it needs
-// far more pixels than its width suggests -- the generated sizes top out well
-// below that and get upscaled into mush. The browser downscales the original
-// for free; the generated sizes still have to be declared in about.json or
-// Discourse does not serialize `topic.thumbnails` at all.
+// The generated sizes go in a srcset, so a list doesn't download every original
+// upload. The original stays as the largest candidate, for screens that need more
+// pixels, and as the src while the resizes are still being generated. The sizes
+// have to be declared in about.json or Discourse doesn't serialize
+// `topic.thumbnails` at all.
 export function pickThumbnail(thumbnails) {
   const original = thumbnails?.[0];
 
@@ -14,8 +13,20 @@ export function pickThumbnail(thumbnails) {
     return null;
   }
 
+  const byWidth = new Map(
+    thumbnails
+      .filter((thumbnail) => thumbnail?.url && thumbnail.width)
+      .sort((a, b) => a.width - b.width)
+      .map((thumbnail) => [thumbnail.width, thumbnail.url])
+  );
+
   return {
     src: original.url,
+    // A single candidate gives the browser no choice, so leave it to `src`.
+    srcset:
+      byWidth.size > 1
+        ? [...byWidth].map(([width, url]) => `${url} ${width}w`).join(", ")
+        : null,
     width: original.width,
     height: original.height,
   };

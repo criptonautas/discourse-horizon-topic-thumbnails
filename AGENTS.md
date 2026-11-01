@@ -23,6 +23,7 @@ Horizon theme and attaches the component to it; the core features spec does not.
 - Category scope is read when the cell renders, not in the `topic-list-columns`
   transformer: that transformer's context is not the route's category, and
   `TopicList#columns` is cached across navigation.
-- The original upload is shown on purpose; generated sizes look soft on retina at
-  this cell size.
+- Images load through a srcset: the sizes declared in `about.json` plus the original
+  as the largest candidate. Dropping the larger size makes retina screens fetch the
+  original, and dropping the srcset makes every list download all the originals.
 - Never edit Horizon. Removing the component must leave it untouched.

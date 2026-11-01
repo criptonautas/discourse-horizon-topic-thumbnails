@@ -34,10 +34,9 @@ trailing edge, under the image.
 
 `about.json` declares `modifiers.topic_thumbnail_sizes`, which is what makes the
 server serialize `topic.thumbnails` at all. The component then displays
-`thumbnails[0]` -- the **original upload** -- rather than one of those generated
-sizes: the cell is narrow but fills the card's height and is cover-cropped, so on a
-retina screen it needs far more pixels than its width suggests, and the generated
-sizes get upscaled into mush. The browser downscales the original for free. The official Topic List Thumbnails component is
+those sizes in a `srcset`, with the **original upload** as the largest candidate, so
+the browser picks what the screen needs instead of downloading every original. Until
+the sizes are generated, it shows the original. The official Topic List Thumbnails component is
 not required, and should not be installed alongside this one -- it fights Horizon's
 card layout.
 
@@ -46,6 +45,7 @@ card layout.
 - Horizon theme with **high context topic cards** enabled
   (`/admin/config/upcoming-changes` -- on by default on recent versions)
 - Site setting `create thumbnails` enabled
+- Discourse 2026.5.0 or later
 
 ## Install
 
@@ -62,7 +62,7 @@ may show the placeholder for a while before their images appear.
 
 | Setting | Default | |
 |---|---|---|
-| `thumbnail_size` | `240` | Width of the thumbnail column in px; the image fills the card's height and is cropped to fit. |
+| `thumbnail_size` | `240` | Width of the thumbnail column in px; the image keeps a 3:2 ratio and is cropped to fit. |
 | `mobile_thumbnails` | `true` | Show thumbnails on mobile, as a banner above the card. See below. |
 | `placeholder_icon` | `comments` | Icon for topics with no image, so cards keep a uniform width. Any icon name works. Leave it and `placeholder_background` empty and those cards run full width instead. |
 | `placeholder_background` | *(none)* | Image behind the placeholder icon. Without one, the placeholder is a soft gradient of the color scheme's accent (`--tertiary-very-low`) into its neutral tint (`--primary-very-low`), so it follows light and dark schemes. With an upload and an empty `placeholder_icon`, the image alone fills the slot. |
@@ -129,8 +129,8 @@ such column, so neither gets a thumbnail cell at all.
 node scripts/thumbnail-source.test.mjs
 ```
 
-Covers srcset/src selection (missing thumbnails, un-generated resizes, display sizes
-larger than anything the server produced) and the category allow-list.
+Covers srcset/src selection (missing thumbnails, un-generated resizes, small uploads)
+and the category allow-list.
 
 ## Known ceiling
 

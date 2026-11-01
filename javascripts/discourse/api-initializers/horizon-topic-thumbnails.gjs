@@ -10,6 +10,9 @@ import {
 
 const ENABLED_CATEGORIES = parseCategoryIds(settings.enabled_categories);
 
+// Below Horizon's `sm` breakpoint the thumbnail is a full-width banner.
+const IMAGE_SIZES = `(max-width: 40rem) 100vw, ${parseInt(settings.thumbnail_size, 10)}px`;
+
 class ThumbnailCell extends Component {
   @service discovery;
 
@@ -47,6 +50,8 @@ class ThumbnailCell extends Component {
       {{else if this.image}}
         <img
           src={{this.image.src}}
+          srcset={{this.image.srcset}}
+          sizes={{if this.image.srcset IMAGE_SIZES}}
           width={{this.image.width}}
           height={{this.image.height}}
           loading="lazy"
@@ -74,9 +79,8 @@ export default apiInitializer((api) => {
 
   api.registerValueTransformer("topic-list-columns", ({ value: columns }) => {
     // Horizon forces the desktop column layout on mobile for card contexts, so
-    // this column would otherwise render on phones too. Its edge-to-edge mobile
-    // card (full-bleed footer, horizontally scrolling tag strip) does not
-    // survive being squeezed into a narrower row, so stay out by default.
+    // this column renders on phones too, as a banner above the card. Admins who
+    // don't want the banner turn off `mobile_thumbnails`.
     if (site.mobileView && !settings.mobile_thumbnails) {
       return columns;
     }

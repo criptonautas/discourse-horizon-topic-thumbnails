@@ -34,10 +34,9 @@ Ambos quedan pegados al borde final de la tarjeta, bajo la imagen.
 
 `about.json` declara `modifiers.topic_thumbnail_sizes`, que es lo que hace que el
 servidor serialice `topic.thumbnails` en absoluto. El componente muestra entonces
-`thumbnails[0]`, la **subida original**, en lugar de alguno de esos tamaños generados:
-la celda es estrecha pero ocupa toda la altura de la tarjeta y se recorta con cover, así que en una
-pantalla retina necesita muchos más píxeles de los que sugiere su ancho, y los tamaños generados
-se amplían hasta quedar borrosos. El navegador reduce el original gratis. El componente oficial Topic List Thumbnails
+esos tamaños en un `srcset`, con la **subida original** como opción más grande, para que el
+navegador elija lo que la pantalla necesita en lugar de descargar cada original. Hasta que se
+generen los tamaños, muestra la original. El componente oficial Topic List Thumbnails
 no es necesario y no debe instalarse junto a este: pelea con el diseño de tarjetas de
 Horizon.
 
@@ -46,6 +45,7 @@ Horizon.
 - Tema Horizon con **tarjetas de tema de alto contexto** activadas
   (`/admin/config/upcoming-changes`; activado por defecto en versiones recientes)
 - Ajuste del sitio `create thumbnails` activado
+- Discourse 2026.5.0 o posterior
 
 ## Instalación
 
@@ -62,7 +62,7 @@ pueden mostrar el marcador de posición un tiempo antes de que aparezcan sus im�
 
 | Ajuste | Por defecto | |
 |---|---|---|
-| `thumbnail_size` | `240` | Ancho de la columna de miniatura en px; la imagen ocupa toda la altura de la tarjeta y se recorta para ajustarse. |
+| `thumbnail_size` | `240` | Ancho de la columna de miniatura en px; la imagen mantiene una proporción 3:2 y se recorta para ajustarse. |
 | `mobile_thumbnails` | `true` | Muestra miniaturas en móvil, como un banner sobre la tarjeta. Ver más abajo. |
 | `placeholder_icon` | `comments` | Icono para temas sin imagen, para que las tarjetas mantengan un ancho uniforme. Sirve cualquier nombre de icono. Si se deja vacío junto con `placeholder_background`, esas tarjetas ocupan el ancho completo. |
 | `placeholder_background` | *(ninguna)* | Imagen detrás del icono de reemplazo. Sin ella, el reemplazo es un degradado suave del acento de la paleta (`--tertiary-very-low`) hacia su tono neutro (`--primary-very-low`), así que sigue los esquemas claro y oscuro. Con una imagen subida y `placeholder_icon` vacío, la imagen sola ocupa el espacio. |
@@ -130,8 +130,8 @@ columna, así que ninguno recibe una celda de miniatura.
 node scripts/thumbnail-source.test.mjs
 ```
 
-Cubre la selección de srcset/src (miniaturas ausentes, redimensiones no generadas, tamaños de visualización
-mayores que cualquiera producido por el servidor) y la lista de categorías permitidas.
+Cubre la selección de srcset/src (miniaturas ausentes, redimensiones no generadas, subidas pequeñas)
+y la lista de categorías permitidas.
 
 ## Techo conocido
 

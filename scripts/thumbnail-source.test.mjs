@@ -8,8 +8,8 @@ import {
 
 const full = [
   { max_width: null, url: "orig.png", width: 1600, height: 1200 },
-  { max_width: 100, url: "a100.png" },
-  { max_width: 400, url: "a400.png" },
+  { max_width: 800, url: "a800.png", width: 800, height: 600 },
+  { max_width: 400, url: "a400.png", width: 400, height: 300 },
 ];
 
 // --- pickThumbnail ---
@@ -19,12 +19,28 @@ assert.equal(pickThumbnail(null), null);
 assert.equal(pickThumbnail([]), null);
 assert.equal(pickThumbnail(undefined), null);
 
-// always the original upload, never a generated size: the cell fills the card
-// height and cover-crops, so the small sizes get upscaled and look soft
+// generated sizes in a srcset, smallest first, with the original as the largest
 const picked = pickThumbnail(full);
 assert.equal(picked.src, "orig.png");
+assert.equal(picked.srcset, "a400.png 400w, a800.png 800w, orig.png 1600w");
 assert.equal(picked.width, 1600);
 assert.equal(picked.height, 1200);
+
+// resizes not generated yet -> the original alone, no srcset
+assert.equal(pickThumbnail([full[0]]).srcset, null);
+assert.equal(
+  pickThumbnail([full[0], { max_width: 400, url: null, width: 400 }]).srcset,
+  null
+);
+
+// a small upload whose resize has the same width -> one candidate, no srcset
+assert.equal(
+  pickThumbnail([
+    { url: "small.png", width: 300, height: 200 },
+    { max_width: 400, url: "small-copy.png", width: 300, height: 200 },
+  ]).srcset,
+  null
+);
 
 // original with no url yet -> nothing rather than a broken image
 assert.equal(pickThumbnail([{ max_width: null, url: null }]), null);
